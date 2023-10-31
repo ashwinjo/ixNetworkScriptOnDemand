@@ -21,8 +21,7 @@ def parse_args(session_name, linux_api_server, linux_api_server_username, linux_
         sm.create_session_object()
         sm.load_config_in_session(ixiaconfigfilepath)
         sm.map_and_connect_ports(source_chassis_card_port, dest_chassis_card_port)
-        sm.verify_control_plane_up()
-    
+        
     if operation == "startTraffic":
         sm = SessionManager(linux_api_server=linux_api_server, session_name=session_name, 
                             username='admin', password=linux_api_server_password)
