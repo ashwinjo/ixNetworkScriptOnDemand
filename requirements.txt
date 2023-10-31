@@ -1,0 +1,2 @@
+ixnetwork-restpy==1.1.10
+click
