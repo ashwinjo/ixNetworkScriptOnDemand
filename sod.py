@@ -73,13 +73,23 @@ class SessionManager():
         ixNetwork.LoadConfig(Files(ixiaconfigfilepath, local_file=True))
 
 
-    def map_and_connect_ports(self, source_chassis_card_port, dest_chassis_card_port):
+    def map_and_connect_ports(self, source_chassis_card_ports, dest_chassis_card_ports):
         session = self.get_session_object() 
         ixNetwork = session.Ixnetwork
+        portList = []
+        # source_chassis_card_ports = ['10.10.10.10;1;5', '10.10.10.10;1;6']
+        # dest_chassis_card_ports = ['10.10.10.10;2;5', '10.10.10.10;2;6']
+
         # Assign ports. Map physical ports to the configured vports.
-        chassis_a, card_a, port_a = source_chassis_card_port.split(";")
-        chassis_b, card_b, port_b = dest_chassis_card_port.split(";")
-        portList = [[chassis_a, card_a, port_a], [chassis_b, card_b, port_b]]
+        for source_chassis_card_port in source_chassis_card_ports.split(","):
+            chassis_a, card_a, port_a = source_chassis_card_port.strip().split(";")
+            portList.append([chassis_a, card_a, port_a])
+        
+        for dest_chassis_card_port in dest_chassis_card_ports.split(","):
+            chassis_b, card_b, port_b = dest_chassis_card_port.strip().split(";")
+            portList.append([chassis_b, card_b, port_b])
+
+        print(portList)
 
         portMap = session.PortMapAssistant()
         for index,port in enumerate(portList):
