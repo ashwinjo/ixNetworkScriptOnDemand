@@ -1,4 +1,5 @@
 from ixnetwork_restpy import SessionAssistant, Files, BatchUpdate
+from tabulate import tabulate
 
 class TrafficGenerator():
     def __init__(self, ixNetwork=None):
@@ -112,9 +113,15 @@ class SessionManager():
     def show_statistics(self):
         session = self.get_session_object() 
         flowStatistics = session.StatViewAssistant('Flow Statistics')
-        print ('Tx Port', 'Rx Port', 'Loss %')
+
+        headers = ['Tx Port', 'Rx Port', 'Loss %', 'TxFrames', 'Rx Frames', 'Rx Expected Frames']
+        data = []
         for rowNumber,flowStat in enumerate(flowStatistics.Rows):
-            print (flowStat['Tx Port'], flowStat['Rx Port'], flowStat['Loss %'])
+            try:
+                data.append([flowStat['Tx Port'], flowStat['Rx Port'], flowStat['Loss %'], flowStat['Tx Frames'], flowStat['Rx Frames'], flowStat['Rx Expected Frames']])
+            except IndexError:
+                data.append([flowStat['Tx Port'], flowStat['Rx Port'], flowStat['Loss %'], flowStat['Tx Frames'], flowStat['Rx Frames'], "NA"])
+        print(tabulate(data, headers=headers, tablefmt='grid'))
                    
     def start_traffic(self):
         session = self.get_session_object() 
